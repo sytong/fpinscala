@@ -35,7 +35,6 @@ object MyModule {
   }
 
   // Exercise 1: Write a function to compute the nth fibonacci number
-
   def fib(n: Int): Int = {
     @annotation.tailrec
     def go(n1: Int, n2: Int, i: Int): Int =
