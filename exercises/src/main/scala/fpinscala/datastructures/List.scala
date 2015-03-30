@@ -49,19 +49,21 @@ object List { // `List` companion object. Contains functions for creating and wo
   def product2(ns: List[Double]) = 
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
-
+  // Exercise 3.2
   def tail[A](l: List[A]): List[A] =
     l match {
       case Nil => Nil
       case Cons(h, t) => t
     }
 
+  // Exercise 3.3
   def setHead[A](l: List[A], h: A): List[A] =
     l match {
       case Nil => Cons(h, Nil)
       case Cons(x, xs) => Cons(h, xs)
     }
 
+  // Exercise 3.4
   def drop[A](l: List[A], n: Int): List[A] = 
     if (n == 0) l
     else l match {
@@ -69,6 +71,7 @@ object List { // `List` companion object. Contains functions for creating and wo
       case Cons(h, t) => drop(t, n-1)
     }
 
+  // Exercise 3.5
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
     l match {
       case Nil => Nil
@@ -77,6 +80,7 @@ object List { // `List` companion object. Contains functions for creating and wo
         else l
     }
 
+  // Exercise 3.6
   def init[A](l: List[A]): List[A] =
     l match {
       case Nil => Nil
@@ -84,9 +88,11 @@ object List { // `List` companion object. Contains functions for creating and wo
       case Cons(h, t) => Cons(h, init(t))
     }
 
+  // Exercise 3.9
   def length[A](l: List[A]): Int =
     foldRight(l, 0)((x ,y) => y + 1)
 
+  // Exercise 3.10
   def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = {
     @annotation.tailrec
     def go(y: B, xs: List[A]): B =
@@ -116,10 +122,50 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   // Exercise 3.13
   def foldLeft313[A,B](l: List[A], z: B)(f: (B, A) => B): B = sys.error("todo")
-
+    
   // Exercise 3.13
   def foldRight313[A,B](as: List[A], z: B)(f: (A, B) => B): B = sys.error("todo")
 
+  // Exercise 3.14
+  def appendFoldRight[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight(a1, a2)((x,y) => Cons(x, y))
 
-  def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
+  // Exercise 3.14
+  def appendFoldLeft[A](a1: List[A], a2: List[A]): List[A] = sys.error("todo")
+
+  // Exercise 3.15
+  def concatenate[A](ll: List[List[A]]): List[A] = sys.error("todo")
+
+  // Exercise 3.16
+  def addOne(l: List[Int]): List[Int] =
+    l match {
+      case Nil => Nil
+      case Cons(h, t) => Cons(h+1, addOne(t))
+    }
+
+  // Exercise 3.17
+  def doubleToString(l: List[Double]): List[String] =
+    l match {
+      case Nil => Nil
+      case Cons(h, t) => Cons(h.toString, doubleToString(t))
+    }
+
+  // Exercise 3.18
+  def map[A,B](l: List[A])(f: A => B): List[B] =
+    l match {
+      case Nil => Nil
+      case Cons(h, t) => Cons(f(h), map(t)(f))
+    }
+
+  // Exercise 3.19
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    as match {
+      case Nil => Nil
+      case Cons(h, t) =>
+        if (f(h)) Cons(h, filter(t)(f))
+        else filter(t)(f)
+    }
+
+  // Exercise 3.20
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = sys.error("todo")
 }
