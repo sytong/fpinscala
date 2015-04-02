@@ -138,33 +138,19 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   // Exercise 3.16
   def addOne(l: List[Int]): List[Int] =
-    l match {
-      case Nil => Nil
-      case Cons(h, t) => Cons(h+1, addOne(t))
-    }
+    foldRight(l, Nil:List[Int])((x, y) => Cons(x+1, y))
 
   // Exercise 3.17
   def doubleToString(l: List[Double]): List[String] =
-    l match {
-      case Nil => Nil
-      case Cons(h, t) => Cons(h.toString, doubleToString(t))
-    }
+    foldRight(l, Nil:List[String])((x,y) => Cons(x.toString, y))
 
   // Exercise 3.18
   def map[A,B](l: List[A])(f: A => B): List[B] =
-    l match {
-      case Nil => Nil
-      case Cons(h, t) => Cons(f(h), map(t)(f))
-    }
+    foldRight(l, Nil:List[B])((x,y) => Cons(f(x), y))
 
   // Exercise 3.19
   def filter[A](as: List[A])(f: A => Boolean): List[A] =
-    as match {
-      case Nil => Nil
-      case Cons(h, t) =>
-        if (f(h)) Cons(h, filter(t)(f))
-        else filter(t)(f)
-    }
+    foldRight(as, Nil:List[A])((x,y) => if (f(x)) Cons(x, y) else y)
 
   // Exercise 3.20
   def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = sys.error("todo")
