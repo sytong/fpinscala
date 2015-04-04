@@ -134,7 +134,8 @@ object List { // `List` companion object. Contains functions for creating and wo
   def appendFoldLeft[A](a1: List[A], a2: List[A]): List[A] = sys.error("todo")
 
   // Exercise 3.15
-  def concatenate[A](ll: List[List[A]]): List[A] = sys.error("todo")
+  def concatenate[A](ll: List[List[A]]): List[A] =
+    foldRight(ll, Nil:List[A])((x, y) => append(x, y))
 
   // Exercise 3.16
   def addOne(l: List[Int]): List[Int] =
@@ -153,5 +154,31 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(as, Nil:List[A])((x,y) => if (f(x)) Cons(x, y) else y)
 
   // Exercise 3.20
-  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = sys.error("todo")
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+    foldRight(as, Nil:List[B])((x,y) => append(f(x), y))
+
+  // Exercise 3.21
+  def filterFM[A](as: List[A])(f: A => Boolean): List[A] =
+    flatMap(as)(x => if (f(x)) Cons(x, Nil) else Nil:List[A])
+
+  // Exercise 3.22
+  def addList(a1: List[Int], a2: List[Int]): List[Int] = {
+    def go(l: List[Int], xs: List[Int], ys: List[Int]): List[Int] =
+      xs match {
+        case Nil => l
+        case Cons(x, xs) => 
+          ys match {
+            case Nil => l
+            case Cons(y, ys) => go(append(l, Cons(x+y, Nil)), xs, ys)
+          }
+      }
+
+    go(Nil:List[Int], a1, a2)
+  }
+
+  // Exercise 2.3
+  def zipWith[A](a1: List[A], a2: List[A]): List[A] = sys.error("todo")
+
+  // Exericse 2.4
+  def hasSubsequence[A](sup: List[A], sub:List[A]): Boolean = sys.error("todo")
 }
