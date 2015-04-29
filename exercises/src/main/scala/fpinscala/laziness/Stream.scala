@@ -17,18 +17,66 @@ trait Stream[+A] {
     case Empty => None
     case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
   }
-  def take(n: Int): Stream[A] = sys.error("todo")
 
-  def drop(n: Int): Stream[A] = sys.error("todo")
+  // Exercise 5.1
+  def toList: List[A] =
+    foldRight(List[A]())((a, b) => a::b)
 
-  def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
+  // Exercise 5.2
+  def take(n: Int): Stream[A] = {
+    def go(i: Int, s: Stream[A]): Stream[A] =
+      if (i == 0) Empty
+      else s match {
+        case Cons(h, t) => Cons(h, () => go(i-1, t()))
+        case Empty => s
+      }
 
-  def forAll(p: A => Boolean): Boolean = sys.error("todo")
+    go(n, this)
+  }
 
+  // Exercise 5.2
+  def drop(n: Int): Stream[A] = {
+    @annotation.tailrec
+    def go(i: Int, s: Stream[A]): Stream[A] =
+      if (i == 0) s
+      else s match {
+        case Empty => s
+        case Cons(h, t) => go(i-1, t())
+      }
+
+    go(n, this)
+  }
+
+  // Exercise 5.3
+  def takeWhile(p: A => Boolean): Stream[A] = 
+    this match {
+      case Cons(h, t) if (p(h())) => cons(h(), t() takeWhile p)
+      case _ => empty
+    }
+
+  // Exercise 5.4
+  def forAll(p: A => Boolean): Boolean =
+    foldRight(true)((a, b) => p(a) && b)
+
+  // Exercise 5.5
+  def takeWhile_55(p: A => Boolean): Stream[A] =
+    foldRight(empty[A])((h,t) => if (p(h)) cons(h, t) else empty)
+
+  // Exercise 5.6
   def headOption: Option[A] = sys.error("todo")
 
   // 5.7 map, filter, append, flatmap using foldRight. Part of the exercise is
   // writing your own function signatures.
+  def map[B](f: A => B): Stream[B] =
+    foldRight(empty[B])((h,t) => cons(f(h), t))
+
+  def filter(f: A => Boolean): Stream[A] = 
+    foldRight(empty[A])((h,t) => if (f(h)) cons(h, t) else t)
+
+  def append(s: Stream[A]): Stream[A] = 
+    foldRight(s)((h, t) => cons(h, t))
+
+
 
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 }
